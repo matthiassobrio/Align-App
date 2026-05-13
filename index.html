@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>ALIGN — Mobile UI Kit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; min-height: 100%; background: #08111F; }
+  body {
+    font-family: 'Inter Tight', sans-serif; color: #FFF;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 32px 16px 48px; gap: 24px; flex-wrap: wrap;
+  }
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .label-row {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: 420px;
+  }
+  .seg {
+    padding: 8px 14px; border-radius: 999px;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.72);
+    border: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Inter Tight', sans-serif; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 150ms;
+  }
+  .seg.active { background: rgba(180,205,255,0.18); border-color: rgba(180,205,255,0.45); color: #B4CDFF; font-weight: 600; }
+  .caption { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="Logo.jsx"></script>
+<script type="text/babel" src="WelcomeScreen.jsx"></script>
+<script type="text/babel" src="SignInScreen.jsx"></script>
+<script type="text/babel" src="QuestionnaireScreen.jsx"></script>
+<script type="text/babel" src="PhotoAnalysisIntroScreen.jsx"></script>
+<script type="text/babel" src="PhotoScreen.jsx"></script>
+<script type="text/babel" src="PhotoCaptureScreen.jsx"></script>
+<script type="text/babel" src="BilanScreen.jsx"></script>
+<script type="text/babel" src="PaywallScreen.jsx"></script>
+<script type="text/babel" src="PaymentScreen.jsx"></script>
+<script type="text/babel" src="AccountSetupScreen.jsx"></script>
+<script type="text/babel" src="TodayScreen.jsx"></script>
+<script type="text/babel" src="ProScreen.jsx"></script>
+<script type="text/babel" src="TrackingScreen.jsx"></script>
+<script type="text/babel" src="ProgramScreen.jsx"></script>
+<script type="text/babel" src="ProfileScreen.jsx"></script>
+<script type="text/babel" src="SessionScreen.jsx"></script>
+<script type="text/babel" src="SessionCompleteScreen.jsx"></script>
+<script type="text/babel" src="RetakeResultsScreen.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const SCREENS = [
+  { id: 'welcome',       label: 'Welcome' },
+  { id: 'signin',        label: 'Sign in' },
+  { id: 'questionnaire', label: 'Questionnaire' },
+  { id: 'photo-intro',   label: 'Photo intro' },
+  { id: 'photo',         label: 'Guided photos' },
+  { id: 'capture',       label: 'Photo capture' },
+  { id: 'bilan',         label: 'Assessment' },
+  { id: 'paywall',       label: 'Paywall' },
+  { id: 'payment',       label: 'Payment' },
+  { id: 'account-setup', label: 'Account setup' },
+  { id: 'today',         label: 'Today' },
+  { id: 'session',       label: 'Session' },
+  { id: 'session-done',  label: 'Session complete' },
+  { id: 'tracking',      label: 'Tracking' },
+  { id: 'program',       label: 'Program' },
+  { id: 'profile',       label: 'Profile' },
+  { id: 'retake-capture', label: 'Photo retake' },
+  { id: 'retake-results', label: 'Retake results' },
+  { id: 'pro',           label: 'Pro' },
+];
+
+function App() {
+  const [screen, setScreen] = React.useState('welcome');
+  const [tab, setTab] = React.useState('today');
+  const [isPro, setIsPro] = React.useState(false);
+  // After cancelling Pro, we keep a record of when it was cancelled and when access actually ends.
+  // While set, the Subscription screen renders the Free layout but with a banner that explains the remaining Pro days.
+  const [proCancellation, setProCancellation] = React.useState(null); // { cancelledAt, accessUntil } | null
+  const [poseIndex, setPoseIndex] = React.useState(0);
+  const [estimate, setEstimate] = React.useState(false);
+  // # of photo retakes the user has completed (after the initial onboarding capture).
+  // Every retake bumps the score, refreshes Tracking metrics, and resets the Profile countdown.
+  const [retakeCount, setRetakeCount] = React.useState(0);
+  const [retakePoseIndex, setRetakePoseIndex] = React.useState(0);
+  // Account-deleted flag: true after the user permanently deletes their account.
+  // While true, the only reachable screen is Welcome, and the deletion toast is shown.
+  const [accountDeleted, setAccountDeleted] = React.useState(false);
+  // Weekly training goal — lifted to App so Today + Profile share the same state.
+  // Sun..Sat array. Default = weekdays.
+  const [goalDays, setGoalDays] = React.useState([false, true, true, true, true, true, false]);
+  // Bumping this counter and routing to 'profile' opens the Weekly goal sheet directly.
+  const [goalSheetTrigger, setGoalSheetTrigger] = React.useState(0);
+  const openWeeklyGoal = () => {
+    setGoalSheetTrigger((n) => n + 1);
+    setTab('profile');
+    setScreen('profile');
+  };
+  // Tracks which mode the AccountSetupScreen should render in — set by PaywallScreen choice.
+  const [pendingMode, setPendingMode] = React.useState('pro-trial');
+  // Plan details captured on the paywall, passed into the payment screen.
+  const [pendingPlan, setPendingPlan] = React.useState({ plan: 'annual', trial: false });
+  const [deleteToast, setDeleteToast] = React.useState(false);
+
+  const handleSignOut = () => {
+    // Reset session-only state and return to Welcome. Account remains intact (no accountDeleted flag).
+    setIsPro(false);
+    setProCancellation(null);
+    setRetakeCount(0);
+    setRetakePoseIndex(0);
+    setPoseIndex(0);
+    setEstimate(false);
+    setTab('today');
+    setAccountDeleted(false);
+    setScreen('welcome');
+  };
+
+  const handleDeleteAccount = () => {
+    // Wipe all account-scoped state.
+    setIsPro(false);
+    setProCancellation(null);
+    setRetakeCount(0);
+    setRetakePoseIndex(0);
+    setPoseIndex(0);
+    setEstimate(false);
+    setTab('today');
+    setAccountDeleted(true);
+    setScreen('welcome');
+    setDeleteToast(true);
+    setTimeout(() => setDeleteToast(false), 3400);
+  };
+
+  const handleTab = (t) => {
+    setTab(t);
+    if (t === 'pro')     setScreen('pro');
+    else if (t === 'today')   setScreen('today');
+    else if (t === 'program') setScreen('program');
+    else if (t === 'bilan')   setScreen('bilan');
+    else if (t === 'profile') setScreen('profile');
+  };
+
+  const renderScreen = () => {
+    switch (screen) {
+      case 'welcome':       return <WelcomeScreen accountDeleted={accountDeleted} onStart={() => { setAccountDeleted(false); setScreen('questionnaire'); }} onSignIn={() => { setAccountDeleted(false); setScreen('signin'); }} />;
+      case 'signin':        return <SignInScreen onBack={() => setScreen('welcome')} onSignIn={() => { setAccountDeleted(false); setTab('today'); setScreen('today'); }} onCreateAccount={() => { setAccountDeleted(false); setScreen('questionnaire'); }} />;
+      case 'questionnaire': return <QuestionnaireScreen onNext={() => setScreen('photo')} onBack={() => setScreen('welcome')} />;
+      case 'photo':         return <PhotoScreen onNext={() => { setEstimate(false); setPoseIndex(0); setScreen('capture'); }} onSkip={() => { setEstimate(true); setScreen('bilan'); }} />;
+      case 'capture':       return <PhotoCaptureScreen poseIndex={poseIndex} onBack={() => setScreen('photo')} onCapture={() => {
+        if (poseIndex < 2) setPoseIndex(poseIndex + 1);
+        else { setPoseIndex(0); setEstimate(false); setScreen('bilan'); }
+      }} />;
+      case 'retake-capture': return <PhotoCaptureScreen poseIndex={retakePoseIndex} onBack={() => { setRetakePoseIndex(0); setScreen('profile'); }} onCapture={() => {
+        if (retakePoseIndex < 2) setRetakePoseIndex(retakePoseIndex + 1);
+        else { setRetakePoseIndex(0); setRetakeCount(retakeCount + 1); setScreen('retake-results'); }
+      }} />;
+      case 'retake-results': return <RetakeResultsScreen retakeCount={retakeCount} onViewProgress={() => setScreen('tracking')} onDone={() => { setTab('today'); setScreen('today'); }} />;
+      case 'bilan':         return <BilanScreen precise={!estimate} locked={!isPro} onContinue={() => setScreen('today')} onUnlock={() => setScreen('paywall')} onPhotoAnalysis={() => setScreen('photo-intro')} />;
+      case 'paywall':       return <PaywallScreen priorityZone="Head & neck" score={!estimate ? 72 : 68} onSubscribe={({ plan, trial }) => { setPendingMode(trial ? 'pro-trial' : 'pro-paid'); setPendingPlan({ plan, trial }); setScreen('payment'); }} onContinueFree={() => { setPendingMode('free'); setScreen('account-setup'); }} onClose={() => setScreen('bilan')} />;
+      case 'payment':       return <PaymentScreen plan={pendingPlan.plan} trial={pendingPlan.trial} onBack={() => setScreen('paywall')} onConfirm={() => setScreen('account-setup')} />;
+      case 'account-setup': return <AccountSetupScreen mode={pendingMode} onCreate={({ mode }) => { setIsPro(mode !== 'free'); setProCancellation(null); setTab('today'); setScreen('today'); }} onBack={() => setScreen('paywall')} onSignIn={() => setScreen('signin')} />;
+      case 'photo-intro':   return <PhotoAnalysisIntroScreen onStart={() => setScreen('photo')} onSkip={() => { setEstimate(true); setScreen('bilan'); }} />;
+      case 'today':         return <TodayScreen tab={tab} onTabChange={handleTab} isPro={isPro} retakeCount={retakeCount} goalDays={goalDays} onOpenSession={() => setScreen('session')} onOpenPro={() => setScreen('pro')} onOpenTracking={() => setScreen('tracking')} onOpenGoal={openWeeklyGoal} />;
+      case 'program':       return <ProgramScreen tab={tab} onTabChange={handleTab} isPro={isPro} goalDays={goalDays} onOpenSession={() => setScreen('session')} onClose={() => { setTab('today'); setScreen('today'); }} onOpenGoal={openWeeklyGoal} />;
+      case 'profile':       return <ProfileScreen tab={tab} onTabChange={handleTab} isPro={isPro} retakeCount={retakeCount} proCancellation={proCancellation} goalDays={goalDays} onGoalChange={setGoalDays} openGoalTrigger={goalSheetTrigger} onCancelPro={(info) => { setProCancellation(info); setIsPro(false); }} onOpenPro={() => setScreen('pro')} onClose={() => { setTab('today'); setScreen('today'); }} onStartRetake={() => { setRetakePoseIndex(0); setScreen('retake-capture'); }} onDeleteAccount={handleDeleteAccount} onSignOut={handleSignOut} />;
+      case 'tracking':      return <TrackingScreen retakeCount={retakeCount} onClose={() => setScreen('today')} onRetake={() => { setRetakePoseIndex(0); setScreen('retake-capture'); }} />;
+      case 'session':       return <SessionScreen onClose={() => setScreen('today')} onComplete={() => setScreen('session-done')} />;
+      case 'session-done':  return <SessionCompleteScreen onContinue={() => setScreen('today')} onClose={() => setScreen('today')} />;
+      case 'pro':           return <ProScreen onSubscribe={() => { setIsPro(true); setProCancellation(null); setTab('today'); setScreen('today'); }} onClose={() => setScreen('today')} />;
+      default: return null;
+    }
+  };
+
+  return (
+    <div className="stage">
+      <div className="caption">ALIGN — interactive mobile UI kit</div>
+
+
+      <div className="label-row">
+        {SCREENS.map(s => {
+          const locked = accountDeleted && s.id !== 'welcome';
+          return (
+            <button
+              key={s.id}
+              className={'seg' + (screen === s.id ? ' active' : '')}
+              onClick={() => {
+                if (locked) return;
+                setScreen(s.id);
+              }}
+              style={locked ? { opacity: 0.32, cursor: 'not-allowed' } : null}
+              title={locked ? 'Account deleted — sign up again from Welcome' : null}
+            >
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="label-row" style={{ marginTop: -2 }}>
+        <button
+          className={'seg' + (isPro ? ' active' : '')}
+          onClick={() => { if (!accountDeleted) { setIsPro(p => !p); setProCancellation(null); } }}
+          style={accountDeleted ? { opacity: 0.32, cursor: 'not-allowed' } : null}
+          title={accountDeleted ? 'No account — sign up first' : null}
+        >
+          {isPro ? '✓ Pro account active (4 tabs)' : 'Free account (5 tabs — Pro visible)'}
+        </button>
+      </div>
+
+      <IOSDevice dark={true}>
+        {renderScreen()}
+        {deleteToast && (
+          <div style={{
+            position: 'absolute', left: 16, right: 16, bottom: 110,
+            padding: '14px 16px', borderRadius: 14,
+            background: 'rgba(20,40,80,0.78)',
+            border: '1px solid rgba(180,205,255,0.24)',
+            backdropFilter: 'blur(22px)',
+            WebkitBackdropFilter: 'blur(22px)',
+            display: 'flex', alignItems: 'center', gap: 12,
+            boxShadow: '0 18px 48px rgba(0,0,0,0.45)',
+            zIndex: 80, pointerEvents: 'none',
+            animation: 'alignToastIn 320ms ease-out both',
+          }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: 999,
+              background: 'rgba(180,205,255,0.16)',
+              border: '1px solid rgba(180,205,255,0.32)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B4CDFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <div style={{
+              fontFamily: "'Inter Tight', sans-serif", color: '#FFFFFF',
+              fontSize: 13.5, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.35,
+            }}>
+              Account deleted.<br/>
+              <span style={{ color: 'rgba(255,255,255,0.62)', fontWeight: 400 }}>You've been signed out.</span>
+            </div>
+          </div>
+        )}
+        <style>{`@keyframes alignToastIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }`}</style>
+      </IOSDevice>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

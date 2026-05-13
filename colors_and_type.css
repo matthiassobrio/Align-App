@@ -1,0 +1,165 @@
+/* =========================================================================
+   ALIGN — Colors, Type, Spacing, Radii, Shadows
+   Single source of truth for all visual tokens.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  /* ---------------------------------------------------------------- COLORS */
+
+  /* Brand — midnight gradient (top → bottom) */
+  --align-bg-top:           #0B1F3A;   /* deep navy */
+  --align-bg-bottom:        #1A1040;   /* shifted indigo */
+  --align-bg-gradient:      linear-gradient(180deg, var(--align-bg-top) 0%, var(--align-bg-bottom) 100%);
+
+  /* Surfaces (translucent layers over the gradient) */
+  --surface-0:              rgba(255, 255, 255, 0.00);
+  --surface-1:              rgba(255, 255, 255, 0.04);   /* card */
+  --surface-2:              rgba(255, 255, 255, 0.07);   /* raised card */
+  --surface-3:              rgba(255, 255, 255, 0.10);   /* hover/active */
+  --surface-stroke:         rgba(255, 255, 255, 0.08);   /* hairline */
+  --surface-stroke-strong:  rgba(255, 255, 255, 0.16);
+
+  /* Foregrounds (on dark) */
+  --fg-1:                   #FFFFFF;                     /* primary text */
+  --fg-2:                   rgba(255, 255, 255, 0.72);   /* secondary */
+  --fg-3:                   rgba(255, 255, 255, 0.52);   /* tertiary / hints */
+  --fg-4:                   rgba(255, 255, 255, 0.32);   /* disabled / decorative */
+
+  /* Accent — soft pale-blue glow */
+  --accent:                 rgba(180, 205, 255, 0.90);
+  --accent-solid:           #B4CDFF;
+  --accent-soft:            rgba(180, 205, 255, 0.18);
+  --accent-glow:            rgba(180, 205, 255, 0.32);
+
+  /* Buttons (fixed white CTA — never tints) */
+  --btn-bg:                 #FFFFFF;
+  --btn-fg:                 #0D1F3C;
+  --btn-bg-press:           rgba(255, 255, 255, 0.88);
+  --btn-ghost-bg:           rgba(255, 255, 255, 0.08);
+  --btn-ghost-fg:           #FFFFFF;
+  --btn-ghost-press:        rgba(255, 255, 255, 0.14);
+
+  /* Semantic */
+  --success:                #8FE3B5;     /* posture improvement */
+  --warning:                #FFD58A;     /* moderate deviation */
+  --danger:                 #FF9C9C;     /* significant deviation */
+  --info:                   var(--accent-solid);
+
+  /* Pro tier */
+  --pro-fg:                 #F5E6C8;     /* warm cream — the only "warm" hue */
+  --pro-bg:                 rgba(245, 230, 200, 0.10);
+  --pro-stroke:             rgba(245, 230, 200, 0.30);
+
+  /* ------------------------------------------------------------------ TYPE */
+
+  --font-sans:              'Inter Tight', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --font-serif:             'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --font-mono:              ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Type scale — mobile-first (375px reference) */
+  --t-display:              clamp(40px, 11vw, 56px);   /* hero numbers, big moments */
+  --t-h1:                   32px;                      /* screen titles */
+  --t-h2:                   24px;                      /* section titles */
+  --t-h3:                   20px;                      /* card titles */
+  --t-body-lg:              18px;                      /* lead paragraph, questionnaire */
+  --t-body:                 16px;                      /* default */
+  --t-body-sm:              14px;                      /* secondary, metadata */
+  --t-caption:              12px;                      /* labels, eyebrows */
+  --t-micro:                11px;                      /* tab bar, tags */
+
+  /* Line heights */
+  --lh-tight:               1.05;
+  --lh-snug:                1.2;
+  --lh-normal:              1.4;
+  --lh-relaxed:             1.55;
+
+  /* Letter spacing */
+  --tr-tight:               -0.02em;
+  --tr-normal:              0;
+  --tr-wide:                0.02em;
+  --tr-eyebrow:             0.14em;     /* uppercase eyebrows */
+
+  /* Weights */
+  --w-light:                300;
+  --w-regular:              400;
+  --w-medium:               500;
+  --w-semi:                 600;
+  --w-bold:                 700;
+
+  /* --------------------------------------------------------------- SPACING */
+  /* 4px base, geometric */
+  --s-0:                    0;
+  --s-1:                    4px;
+  --s-2:                    8px;
+  --s-3:                    12px;
+  --s-4:                    16px;
+  --s-5:                    20px;
+  --s-6:                    24px;
+  --s-7:                    32px;
+  --s-8:                    40px;
+  --s-9:                    56px;
+  --s-10:                   72px;
+  --s-screen-x:             20px;        /* default screen padding */
+  --s-screen-bottom:        32px;        /* CTA breathing room above safe-area */
+
+  /* ------------------------------------------------------- RADII / SHAPES */
+  --r-sm:                   8px;
+  --r-md:                   14px;
+  --r-lg:                   20px;        /* cards */
+  --r-xl:                   28px;        /* sheets, big modules */
+  --r-2xl:                  36px;
+  --r-pill:                 999px;       /* CTAs, chips */
+
+  /* ----------------------------------------------------- SHADOWS / GLOWS */
+  /* On dark backgrounds, "shadows" are mostly soft glows + subtle inner light */
+  --shadow-card:            0 1px 0 0 rgba(255,255,255,0.04) inset,
+                            0 12px 32px -16px rgba(0,0,0,0.5);
+  --shadow-cta:             0 8px 24px -8px rgba(180,205,255,0.25),
+                            0 1px 0 0 rgba(255,255,255,0.6) inset;
+  --shadow-floating:        0 24px 48px -16px rgba(0,0,0,0.55);
+  --glow-accent:            0 0 32px 0 var(--accent-glow);
+
+  /* ------------------------------------------------------- BLUR / GLASS */
+  --blur-glass:             20px;
+  --blur-strong:            40px;
+
+  /* ------------------------------------------------------------- MOTION */
+  --ease-out:               cubic-bezier(0.22, 1, 0.36, 1);     /* default — calm exit */
+  --ease-in-out:            cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:            cubic-bezier(0.34, 1.56, 0.64, 1);  /* sparingly */
+  --dur-fast:               150ms;
+  --dur:                    260ms;
+  --dur-slow:               420ms;
+
+  /* ------------------------------------------------------------ LAYOUT */
+  --tabbar-h:               68px;
+  --statusbar-h:            44px;
+  --safe-bottom:            34px;
+  --screen-max-w:           430px;       /* iPhone Pro Max */
+}
+
+/* =========================================================================
+   Semantic element styles — drop into pages as utility classes
+   ========================================================================= */
+
+.align-bg {
+  background: var(--align-bg-gradient);
+  color: var(--fg-1);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.t-display   { font-family: var(--font-serif); font-size: var(--t-display); line-height: var(--lh-tight); letter-spacing: var(--tr-tight); font-weight: var(--w-regular); }
+.t-h1        { font-size: var(--t-h1); line-height: var(--lh-snug); letter-spacing: var(--tr-tight); font-weight: var(--w-semi); }
+.t-h2        { font-size: var(--t-h2); line-height: var(--lh-snug); letter-spacing: var(--tr-tight); font-weight: var(--w-semi); }
+.t-h3        { font-size: var(--t-h3); line-height: var(--lh-snug); font-weight: var(--w-medium); }
+.t-body-lg   { font-size: var(--t-body-lg); line-height: var(--lh-relaxed); font-weight: var(--w-regular); color: var(--fg-2); }
+.t-body      { font-size: var(--t-body); line-height: var(--lh-relaxed); font-weight: var(--w-regular); }
+.t-body-sm   { font-size: var(--t-body-sm); line-height: var(--lh-normal); font-weight: var(--w-regular); color: var(--fg-2); }
+.t-caption   { font-size: var(--t-caption); line-height: var(--lh-normal); font-weight: var(--w-medium); color: var(--fg-3); }
+.t-eyebrow   { font-size: var(--t-caption); line-height: var(--lh-normal); font-weight: var(--w-semi); letter-spacing: var(--tr-eyebrow); text-transform: uppercase; color: var(--accent-solid); }
+.t-micro     { font-size: var(--t-micro); line-height: 1.2; font-weight: var(--w-medium); }
+.t-numeric   { font-feature-settings: "tnum" 1, "ss01" 1; }

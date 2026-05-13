@@ -84,7 +84,7 @@ function SessionScreen({ onClose, onComplete, exercises = SESSION_EXERCISES }) {
         }}>
           {/* Instructor placeholder */}
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#B4CDFF', opacity: 0.92 }}>
-            <object data="../../assets/posture/side.svg" type="image/svg+xml" style={{ height: '78%', pointerEvents: 'none' }} />
+            <object data="assets/posture/side.svg" type="image/svg+xml" style={{ height: '78%', pointerEvents: 'none' }} />
           </div>
 
           {/* Tracking dots overlay (suggesting pose detection) */}

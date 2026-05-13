@@ -135,7 +135,7 @@ function BilanScreen({ precise = true, locked = false, onContinue, onPhotoAnalys
               </div>
             </div>
             <div style={{ color: '#B4CDFF', height: 140, opacity: 0.85 }}>
-              <object data="../../assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
+              <object data="assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
             </div>
           </div>
         </Card>

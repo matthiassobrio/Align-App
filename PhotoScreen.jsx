@@ -35,7 +35,7 @@ function PhotoScreen({ onNext, onSkip }) {
           {['front', 'side', 'back'].map((view, i) => (
             <div key={view} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, opacity: i === 0 ? 1 : 0.45 }}>
               <div style={{ color: i === 0 ? '#B4CDFF' : 'rgba(255,255,255,0.5)', height: 160 }}>
-                <object data={`../../assets/posture/${view}.svg`} type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
+                <object data={`assets/posture/${view}.svg`} type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
               </div>
               <div style={{ fontSize: 11, color: i === 0 ? '#B4CDFF' : 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                 {view === 'front' ? 'Front' : view === 'side' ? 'Side' : 'Back'}

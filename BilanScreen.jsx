@@ -60,7 +60,7 @@ function BilanScreen({ precise = true, locked = false, onContinue, onPhotoAnalys
   const previewCount = locked ? 2 : zones.length;
 
   return (
-    <Screen padBottom={40}>
+    <Screen padBottom={96}>
       <ScreenHeader
         left={<div style={{ color: '#FFFFFF' }}>
           <svg width="28" height="28" viewBox="0 0 64 64" fill="none">

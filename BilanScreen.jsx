@@ -60,7 +60,7 @@ function BilanScreen({ precise = true, locked = false, onContinue, onPhotoAnalys
   const previewCount = locked ? 2 : zones.length;
 
   return (
-    <Screen padBottom={40}>
+    <Screen padBottom={96}>
       <ScreenHeader
         left={<div style={{ color: '#FFFFFF' }}>
           <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
@@ -135,7 +135,7 @@ function BilanScreen({ precise = true, locked = false, onContinue, onPhotoAnalys
               </div>
             </div>
             <div style={{ color: '#B4CDFF', height: 140, opacity: 0.85 }}>
-              <object data="../../assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
+              <object data="assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
             </div>
           </div>
         </Card>

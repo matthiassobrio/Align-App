@@ -104,7 +104,7 @@ function RetakeResultsScreen({ retakeCount = 1, onViewProgress, onDone }) {
                   transform: k === 0 ? 'rotate(-1.5deg) translateX(2px)' : 'rotate(0deg)',
                   transition: 'transform 240ms',
                 }}>
-                  <object data="../../assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
+                  <object data="assets/posture/side.svg" type="image/svg+xml" style={{ height: '100%', pointerEvents: 'none' }} />
                 </div>
                 {/* Date chip */}
                 <div style={{

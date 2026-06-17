@@ -15,7 +15,7 @@ const POSES = [
       'Arms hang naturally',
       'Weight even on both feet',
     ],
-    asset: '../../assets/posture/front.svg',
+    asset: 'assets/posture/front.svg',
   },
   {
     id: 'side',
@@ -28,7 +28,7 @@ const POSES = [
       'Arms by your sides, not behind',
       'Eyes level, chin parallel to floor',
     ],
-    asset: '../../assets/posture/side.svg',
+    asset: 'assets/posture/side.svg',
   },
   {
     id: 'back',
@@ -41,7 +41,7 @@ const POSES = [
       'Shoulder blades relaxed',
       'Heels touching the floor flat',
     ],
-    asset: '../../assets/posture/back.svg',
+    asset: 'assets/posture/back.svg',
   },
 ];
 
